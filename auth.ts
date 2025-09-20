@@ -5,6 +5,8 @@ import { z } from 'zod';
 import type { User } from '@/app/lib/definitions';
 import bcrypt from 'bcrypt';
 import postgres from 'postgres';
+// in auth.ts (top-level)
+console.log('AUTH_SECRET present:', Boolean(process.env.AUTH_SECRET));
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
  
