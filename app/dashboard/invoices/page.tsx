@@ -29,10 +29,6 @@ export default async function Page(props: {
           <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
             <Table query={query} currentPage={currentPage} />
           </Suspense>
-      
-      { <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
-        <Table query={query} currentPage={currentPage} />
-      </Suspense> }
       <div className="mt-5 flex w-full justify-center">
         {/* <Pagination totalPages={totalPages} /> */}
           <Pagination totalPages={totalPages} />
