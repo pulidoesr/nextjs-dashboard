@@ -7,58 +7,58 @@ import { generatePagination } from '@/app/lib/utils';
 import { usePathname, useSearchParams } from 'next/navigation';
 
 export default function Pagination({ totalPages }: { totalPages: number }) {
+  // NOTE: Uncomment this code in Chapter 11
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const currentPage = Math.max(1, Number(searchParams.get('page')) || 1);
-
-  // ✅ Use the pagination generator
+  const currentPage = Number(searchParams.get('page')) || 1;
   const allPages = generatePagination(currentPage, totalPages);
 
-  const createPageURL = (pageNumber: number) => {
-    const params = new URLSearchParams(searchParams);
+  // const allPages = generatePagination(currentPage, totalPages);
+  const createPageURL = (pageNumber: number | string) => {
+  const params = new URLSearchParams(searchParams);
     params.set('page', pageNumber.toString());
     return `${pathname}?${params.toString()}`;
   };
 
   return (
-    <div className="inline-flex">
-      <PaginationArrow
-        direction="left"
-        href={createPageURL(Math.max(1, currentPage - 1))}
-        isDisabled={currentPage <= 1}
-      />
+    <>
+      {/*  NOTE: Uncomment this code in Chapter 11 */}
 
-      <div className="flex -space-x-px">
-        {allPages.map((page, index) => {
-          const isEllipsis = page === '...';
-          const key = isEllipsis ? `ellipsis-${index}` : `page-${page}`;
+      {<div className="inline-flex">
+        <PaginationArrow
+          direction="left"
+          href={createPageURL(currentPage - 1)}
+          isDisabled={currentPage <= 1}
+        />
 
-          let position: 'first' | 'last' | 'single' | 'middle' | undefined;
-          if (index === 0) position = 'first';
-          if (index === allPages.length - 1) position = 'last';
-          if (allPages.length === 1) position = 'single';
-          if (isEllipsis) position = 'middle';
+        <div className="flex -space-x-px">
+          {allPages.map((page, index) => {
+            let position: 'first' | 'last' | 'single' | 'middle' | undefined;
 
-          const isActive = typeof page === 'number' && currentPage === page;
+            if (index === 0) position = 'first';
+            if (index === allPages.length - 1) position = 'last';
+            if (allPages.length === 1) position = 'single';
+            if (page === '...') position = 'middle';
 
-          return (
-            <PaginationNumber
-              key={key}                         // ✅ unique, stable string keys
-              href={typeof page === 'number' ? createPageURL(page) : '#'}
-              page={page}
-              position={position}
-              isActive={isActive}
-            />
-          );
-        })}
-      </div>
+            return (
+              <PaginationNumber
+                key={`${page}-${index}`}
+                href={createPageURL(page)}
+                page={page}
+                position={position}
+                isActive={currentPage === page}
+              />
+            );
+          })}
+        </div>
 
-      <PaginationArrow
-        direction="right"
-        href={createPageURL(Math.min(totalPages, currentPage + 1))}
-        isDisabled={currentPage >= totalPages}
-      />
-    </div>
+        <PaginationArrow
+          direction="right"
+          href={createPageURL(currentPage + 1)}
+          isDisabled={currentPage >= totalPages}
+        />
+      </div>}
+    </>
   );
 }
 
@@ -84,7 +84,6 @@ function PaginationNumber({
     },
   );
 
-  // Ellipsis and active page render as <div>; only numbers become links
   return isActive || position === 'middle' ? (
     <div className={className}>{page}</div>
   ) : (
