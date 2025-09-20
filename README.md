@@ -3,3 +3,8 @@
 This is the starter template for the Next.js App Router Course. It contains the starting code for the dashboard application.
 
 For more information, see the [course curriculum](https://nextjs.org/learn) on the Next.js Website.
+
+# Vercel Secret Key Windows can use https://generate-secret.vercel.app/32
+
+Email: user@nextmail.com
+Password: 123456
